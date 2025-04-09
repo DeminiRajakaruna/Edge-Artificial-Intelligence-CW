@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elephant Detection System</title>
+    <link rel="stylesheet" href="/App.css">
+</head>
+<body>
+    <div class="container">
+        <img src="/logo.jpeg" class="logo" alt="App Logo">
+
+        <h1>Live Elephant Detection </h1>
+        <p class="description">
+            This web app streams live video from a camera to monitor for elephants, and allows remote control of a buzzer to scare them away.
+        </p>
+
+        <div class="video-container">
+            <img src="/video" alt="Live Video">
+        </div>
+
+        <div class="buzzer-control">
+            <form action="/buzzer" method="post">
+                <button name="action" value="ON" class="btn on">Turn ON Buzzer</button>
+                <button name="action" value="OFF" class="btn off">Turn OFF Buzzer</button>
+            </form>
+            <p class="status">Current Buzzer State: <strong>{{ buzzer_state }}</strong></p>
+        </div>
+    </div>
+</body>
+</html>
