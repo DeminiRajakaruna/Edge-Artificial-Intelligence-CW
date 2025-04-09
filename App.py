@@ -32,9 +32,9 @@ def video():
 def style():
     return send_file('App.css')
 
-@app.route('/logo.jpeg')
+@app.route('/logo.png')
 def logo():
-    return send_file('logo.jpeg')
+    return send_file('logo.png')
 
 @app.route('/bg.jpeg')
 def bg():
