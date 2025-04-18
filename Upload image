@@ -41,3 +41,92 @@ def allowed_file(filename):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
+
+
+**********************************************************************************************
+
+
+Flask Server Setup:
+
+Uses /upload endpoint for image reception
+
+Handles multipart/form-data uploads
+
+Implements proper error handling for HTTP 400 scenarios
+
+ESP32-CAM Client Code (Arduino):
+
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include "esp_camera.h"
+
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
+const char* serverURL = "http://your-server-ip:8000/upload";
+
+void setup() {
+  // Camera initialization
+  camera_config_t config;
+  // ... (standard camera config)
+  esp_err_t err = esp_camera_init(&config);
+  
+  // WiFi connection
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) delay(500);
+}
+
+void loop() {
+  if(motion_detected()) { // Implement your motion detection
+    camera_fb_t *fb = esp_camera_fb_get();
+    if(fb) {
+      sendImage(fb->buf, fb->len);
+      esp_camera_fb_return(fb);
+    }
+  }
+  delay(1000);
+}
+
+void sendImage(uint8_t *image_data, size_t image_size) {
+  HTTPClient http;
+  http.begin(serverURL);
+  
+  // Create multipart request
+  String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+  http.addHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+  
+  String body = "--" + boundary + "\r\n";
+  body += "Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\n";
+  body += "Content-Type: image/jpeg\r\n\r\n";
+  
+  // Create final payload
+  String footer = "\r\n--" + boundary + "--\r\n";
+  size_t total_length = body.length() + image_size + footer.length();
+  
+  http.setTimeout(10000);
+  int httpResponseCode = http.sendRequest("POST", (uint8_t*)body.c_str(), body.length(), 
+                                        image_data, image_size, 
+                                        (uint8_t*)footer.c_str(), footer.length());
+
+  if(httpResponseCode == 200) {
+    // Handle successful upload
+  }
+  http.end();
+}
+
+*************************************************************
+
+#Deployment Notes:
+
+#Use Gunicorn + Nginx for production deployment
+
+
+gunicorn run:app -b 0.0.0.0:8000
+
+
+
+#Required packages (requirements.txt):
+
+flask==2.0.3
+werkzeug==2.0.3
+
+
