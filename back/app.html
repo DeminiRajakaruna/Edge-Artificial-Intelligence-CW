@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Elephant Detector</title>
+</head>
+<body>
+  <h1>Elephant Detection</h1>
+  <input type="file" id="photo">
+  <button onclick="upload()">Upload & Check</button>
+  <p id="result"></p>
+
+  <script>
+    function upload() {
+      const fileInput = document.getElementById("photo");
+      const formData = new FormData();
+      formData.append("image", fileInput.files[0]);
+
+      fetch("https://your-web-server.com/api/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.elephant) {
+          document.getElementById("result").textContent = "🐘 Elephant detected! Buzzer on.";
+        } else {
+          document.getElementById("result").textContent = "✅ No elephant detected.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

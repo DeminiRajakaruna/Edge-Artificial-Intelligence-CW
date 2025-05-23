@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elephant Detection System</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <div class="overlay">
+      <img src="logo.png" alt="Logo" class="logo">
+      <h1>Elephant Detection System</h1>
+
+      <!-- 🔴 Live Video Stream -->
+      <div class="video-wrapper">
+        <img id="live-video" src="http://192.168.1.7:81/stream" alt="Live Video Stream">
+      </div>
+
+      <div class="bar"></div>
+
+      <div class="buttons">
+        <button class="green" onclick="toggleBuzzer('on')">Turn ON Buzzer</button>
+        <button class="red" onclick="toggleBuzzer('off')">Turn OFF Buzzer</button>
+      </div>
+
+      <p id="status">Current Buzzer State: OFF</p>
+    </div>
+  </div>
+</body>
+</html>
